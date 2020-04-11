@@ -13,8 +13,7 @@ public class CameraScript : MonoBehaviour
     private float maxTurnAngle = 0.0f;
     private float rotX;
 
-    private Vector3 initialCameraRotation = Vector3.zero;
-    private float initialCameraDistance;
+    private bool lookAroundMode;
 
     void Start()
     {
@@ -38,14 +37,10 @@ public class CameraScript : MonoBehaviour
         // clamp the vertical rotation
         rotX = Mathf.Clamp(rotX, minTurnAngle, maxTurnAngle);
 
+        // Check current camera mode
         if (Input.GetKey(lookAroundModeKey))
         {
-            // Save initial camera rotation
-            if (initialCameraRotation == Vector3.zero)
-            {
-                initialCameraRotation = this.transform.eulerAngles;
-                initialCameraDistance = targetDistance;
-            }
+            lookAroundMode = true;
 
             // Rotate and translate camera
             transform.eulerAngles = new Vector3(-rotX, transform.eulerAngles.y + y, 0);
@@ -53,12 +48,10 @@ public class CameraScript : MonoBehaviour
         }
         else
         {
-            // ...
-            if (initialCameraRotation != Vector3.zero)
+            if (lookAroundMode)
             {
-                transform.eulerAngles = initialCameraRotation;
-                targetDistance = initialCameraDistance;
-                initialCameraRotation = Vector3.zero;
+                player.transform.eulerAngles = player.transform.eulerAngles + Vector3.up * 90;
+                lookAroundMode = false;
             }
 
             // Rotate and translate camera
