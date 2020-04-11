@@ -7,16 +7,14 @@ public class PlayerMovement : MonoBehaviour
     public GameObject Cam;
     private float playerSpeed = 6f;
     private Rigidbody rb;
+    private bool canJump = true;
+    private bool isGrounded = false;
     private float jumpForce = 5000f;
+    private float accelaration = 0f;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
-
-        // # DEBUG
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -26,14 +24,15 @@ public class PlayerMovement : MonoBehaviour
 
         // handle jumps
         HandleJupms();
+
+        // handle gravity
+        HandleGravity();
     }
 
     private void HandleMovement()
     {
         // handle basic movement
-        Vector3 playerForwardVec = this.transform.forward * playerSpeed;
-        Vector3 playerRightVec = this.transform.right * playerSpeed;
-
+        Vector3 cameraForwardVec = Cam.transform.forward * playerSpeed;
         Vector3 velocity = Vector3.zero;
 
         // check if player is sprinting
@@ -44,13 +43,13 @@ public class PlayerMovement : MonoBehaviour
 
         // handle movement input
         if (Input.GetKey(KeyCode.W))
-            velocity += -1 * new Vector3(playerForwardVec.x, 0, playerForwardVec.z);
+            velocity += new Vector3(cameraForwardVec.x, 0, cameraForwardVec.z);
         if (Input.GetKey(KeyCode.S))
-            velocity += new Vector3(playerForwardVec.x, 0, playerForwardVec.z);
+            velocity += -1 * new Vector3(cameraForwardVec.x, 0, cameraForwardVec.z);
         if (Input.GetKey(KeyCode.D))
-            velocity += -1 * new Vector3(playerRightVec.x, 0, playerRightVec.z);
+            velocity += new Vector3(Cam.transform.right.x, 0, Cam.transform.right.z) * playerSpeed;
         if (Input.GetKey(KeyCode.A))
-            velocity += new Vector3(playerRightVec.x, 0, playerRightVec.z);
+            velocity += -1 * new Vector3(Cam.transform.right.x, 0, Cam.transform.right.z) * playerSpeed;
 
         // cap player speed
         if (velocity.x > 10f)
@@ -84,14 +83,50 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJupms()
     {
-         if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
-            rb.velocity += new Vector3(0, 100, 0);   
+            rb.transform.position += new Vector3(0, 1, 0);
+            accelaration = 15f;
         }
 
-        if (Physics.CheckSphere(new Vector3(0, 10f, 0), 1))
+        // Check for collision with ground
+        if (isGrounded)
+            canJump = true;
+        else
+            canJump = false;
+    }
+
+    private float GetDistanceFromGround()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position - new Vector3(0, transform.localScale.y, 0), -transform.up, out hit, Mathf.Infinity))
         {
-            print("touching ground");
+            return hit.distance;
         }
+
+        return Mathf.Infinity;
+    }
+
+    private void HandleGravity()
+    {
+        if (!isGrounded)
+        {
+            accelaration -= 40f * Time.deltaTime;
+            rb.velocity += new Vector3(0, accelaration, 0);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (Physics.CheckSphere(transform.position - new Vector3(0, 0.9f, 0), 0.1f))
+        {
+            isGrounded = true;
+            accelaration = 0;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
     }
 }
