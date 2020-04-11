@@ -7,10 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject Cam;
     private float playerSpeed = 6f;
     private Rigidbody rb;
-    private bool canJump = true;
-    private bool isInAir = false;
     private float jumpForce = 5000f;
-    public float accelaration = 0f;
 
     private void Start()
     {
@@ -24,9 +21,6 @@ public class PlayerMovement : MonoBehaviour
 
         // handle jumps
         HandleJupms();
-
-        // handle gravity
-        HandleGravity();
     }
 
     private void HandleMovement()
@@ -83,51 +77,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJupms()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.transform.position += new Vector3(0, 1, 0);
-            accelaration = 15f;
+            rb.velocity += new Vector3(0, 100, 0);   
         }
 
-        // Check for collision with ground
-        if (IsPlayerTouchingGround())
+        if (Physics.CheckSphere(new Vector3(0, 10f, 0), 1))
         {
-            canJump = true;
-            accelaration = 0;
-            isInAir = false;
-        }
-        else
-        {
-            canJump = false;
-            isInAir = true;
-        }
-    }
-
-    private float GetDistanceFromGround()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position - new Vector3(0, transform.localScale.y, 0), -transform.up, out hit, Mathf.Infinity))
-        {
-            return hit.distance;
-        }
-
-        return Mathf.Infinity;
-    }
-
-    private bool IsPlayerTouchingGround()
-    {
-        if (GetDistanceFromGround() <= 1f)
-            return true;
-
-        return false;
-    }
-
-    private void HandleGravity()
-    {
-        if (isInAir)
-        {
-            accelaration -= 40f * Time.deltaTime;
-            rb.velocity += new Vector3(0, accelaration, 0);
+            print("touching ground");
         }
     }
 }
