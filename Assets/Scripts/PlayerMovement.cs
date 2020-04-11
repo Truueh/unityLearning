@@ -39,7 +39,6 @@ public class PlayerMovement : MonoBehaviour
         // handle basic movement
         Vector3 playerForwardVec = this.transform.forward * playerSpeed;
         Vector3 playerRightVec = this.transform.right * playerSpeed;
-
         Vector3 velocity = Vector3.zero;
 
         // check if player is sprinting
