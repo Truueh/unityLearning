@@ -15,6 +15,11 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        
+
+        // # DEBUG
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -32,7 +37,9 @@ public class PlayerMovement : MonoBehaviour
     private void HandleMovement()
     {
         // handle basic movement
-        Vector3 cameraForwardVec = Cam.transform.forward * playerSpeed;
+        Vector3 playerForwardVec = this.transform.forward * playerSpeed;
+        Vector3 playerRightVec = this.transform.right * playerSpeed;
+
         Vector3 velocity = Vector3.zero;
 
         // check if player is sprinting
@@ -43,13 +50,13 @@ public class PlayerMovement : MonoBehaviour
 
         // handle movement input
         if (Input.GetKey(KeyCode.W))
-            velocity += new Vector3(cameraForwardVec.x, 0, cameraForwardVec.z);
+            velocity += -1 * new Vector3(playerForwardVec.x, 0, playerForwardVec.z);
         if (Input.GetKey(KeyCode.S))
-            velocity += -1 * new Vector3(cameraForwardVec.x, 0, cameraForwardVec.z);
+            velocity += new Vector3(playerForwardVec.x, 0, playerForwardVec.z);
         if (Input.GetKey(KeyCode.D))
-            velocity += new Vector3(Cam.transform.right.x, 0, Cam.transform.right.z) * playerSpeed;
+            velocity += -1 * new Vector3(playerRightVec.x, 0, playerRightVec.z);
         if (Input.GetKey(KeyCode.A))
-            velocity += -1 * new Vector3(Cam.transform.right.x, 0, Cam.transform.right.z) * playerSpeed;
+            velocity += new Vector3(playerRightVec.x, 0, playerRightVec.z);
 
         // cap player speed
         if (velocity.x > 10f)
