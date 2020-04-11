@@ -8,9 +8,9 @@ public class PlayerMovement : MonoBehaviour
     private float playerSpeed = 6f;
     private Rigidbody rb;
     private bool canJump = true;
-    private bool isGrounded = false;
-    private float jumpForce = 5000f;
-    public float accelaration = 0f;
+    public bool isGrounded = false;
+    public float jumpForce = 10;
+    public float bonusGravity = 10;
 
     private void Start()
     {
@@ -28,10 +28,7 @@ public class PlayerMovement : MonoBehaviour
         HandleMovement();
 
         // handle jumps
-        HandleJupms();
-
-        // handle gravity
-        HandleGravity();
+        HandleJumps();
     }
 
     private void HandleMovement()
@@ -84,34 +81,18 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // apply new velocity
-        rb.velocity = velocity;
+        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
     }
 
-    private void HandleJupms()
+    private void HandleJumps()
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.transform.position += new Vector3(0, 1, 0);
-            accelaration = 15f;
+            rb.velocity += new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         }
-    }
-    private void OnCollisionStay(Collision collision)
-    {
-        isGrounded = true;
-        accelaration = 0;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        isGrounded = false;
-    }
-
-    private void HandleGravity()
-    {
-        if (!isGrounded)
+        else if (!isGrounded)
         {
-            accelaration -= 40f * Time.deltaTime;
-            rb.velocity += new Vector3(0, accelaration, 0);
+            rb.velocity -= new Vector3(0, bonusGravity * Time.deltaTime, 0);
         }
     }
 }
