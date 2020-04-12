@@ -14,19 +14,17 @@ public class PlayerGroundCollision : MonoBehaviour
         playerMovement = player.GetComponent<PlayerMovement>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.name != player.name)
+        if (other.name != player.name)
         {
-            print("Enter ");
             playerMovement.isGrounded = true;
         }
     }
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.collider.name != player.name)
+        if (other.name != player.name)
         {
-            print("Exit");
             playerMovement.isGrounded = false;
         }
     }

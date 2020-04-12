@@ -4,95 +4,60 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public GameObject Cam;
-    private float playerSpeed = 6f;
-    private Rigidbody rb;
-    private bool canJump = true;
-    public bool isGrounded = false;
-    public float jumpForce = 10;
-    public float bonusGravity = 10;
+    public float currentSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
+
+    CharacterController controller;
+    public bool isGrounded;
+    public float gravity;
+    public float jumpHeight;
+    public Vector3 velocity;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-
-
-        // # DEBUG
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        controller = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
-        // handle movement
+        // Handle movement
         HandleMovement();
 
-        // handle jumps
-        HandleJumps();
+        // Handle jump
+        HandleJump();
     }
 
     private void HandleMovement()
     {
-        // handle basic movement
-        Vector3 playerForwardVec = this.transform.forward * playerSpeed;
-        Vector3 playerRightVec = this.transform.right * playerSpeed;
-        Vector3 velocity = Vector3.zero;
-
-        // check if player is sprinting
         if (Input.GetKey(KeyCode.LeftShift))
-            playerSpeed = 10f;
+        {
+            currentSpeed = sprintSpeed;
+        }
         else
-            playerSpeed = 6f;
-
-        // handle movement input
-        if (Input.GetKey(KeyCode.W))
-            velocity += -1 * new Vector3(playerForwardVec.x, 0, playerForwardVec.z);
-        if (Input.GetKey(KeyCode.S))
-            velocity += new Vector3(playerForwardVec.x, 0, playerForwardVec.z);
-        if (Input.GetKey(KeyCode.D))
-            velocity += -1 * new Vector3(playerRightVec.x, 0, playerRightVec.z);
-        if (Input.GetKey(KeyCode.A))
-            velocity += new Vector3(playerRightVec.x, 0, playerRightVec.z);
-
-        // cap player speed
-        if (velocity.x > 10f)
         {
-            float remainder = velocity.x - 10f;
-            velocity.x = 10f;
-            velocity.z -= remainder;
-        }
-        else if (velocity.z > 10f)
-        {
-            float remainder = velocity.z - 10f;
-            velocity.z = 10f;
-            velocity.x -= remainder;
-        }
-        else if (velocity.x < -10f)
-        {
-            float remainder = velocity.x + 10f;
-            velocity.x = -10f;
-            velocity.z += remainder;
-        }
-        else if (velocity.z < -10f)
-        {
-            float remainder = velocity.z + 10f;
-            velocity.z = -10f;
-            velocity.x += remainder;
+            currentSpeed = walkSpeed;
         }
 
-        // apply new velocity
-        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * x + transform.forward * z;
+        controller.Move(-move * Time.deltaTime * currentSpeed);
     }
 
-    private void HandleJumps()
+    private void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (isGrounded && velocity.y < 0)
         {
-            rb.velocity += new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            velocity.y = 0;
         }
-        else if (!isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity -= new Vector3(0, bonusGravity * Time.deltaTime, 0);
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }
