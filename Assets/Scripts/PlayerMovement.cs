@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float currentSpeed;
+    private float currentSpeed;
     public float walkSpeed;
     public float sprintSpeed;
 
-    CharacterController controller;
+    private CharacterController controller;
+    public GameObject cam;
     public bool isGrounded;
     public float gravity;
     public float jumpHeight;
