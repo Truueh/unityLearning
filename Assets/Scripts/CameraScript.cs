@@ -50,7 +50,11 @@ public class CameraScript : MonoBehaviour
         {
             if (lookAroundMode)
             {
-                //player.transform.eulerAngles = player.transform.eulerAngles + Vector3.up * 90
+                // Solution to look around mode:
+                // get camera out of player children
+                // make player look at camera
+                // turn player 180 degrees
+                // get camera back to player children
                 transform.parent = null;
                 Vector3 angles = player.transform.rotation.eulerAngles;
                 player.transform.LookAt(transform);
