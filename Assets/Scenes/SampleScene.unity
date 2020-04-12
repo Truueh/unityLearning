@@ -977,7 +977,7 @@ GameObject:
   - component: {fileID: 1651318902}
   - component: {fileID: 1651318901}
   m_Layer: 8
-  m_Name: Floor
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1423,7 +1423,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2030402206}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.54, y: 13.57, z: 24.01}
+  m_LocalPosition: {x: 7.54, y: 50, z: 24.01}
   m_LocalScale: {x: 1, y: 1.4, z: 1}
   m_Children:
   - {fileID: 1366570079}

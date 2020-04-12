@@ -50,7 +50,12 @@ public class CameraScript : MonoBehaviour
         {
             if (lookAroundMode)
             {
-                player.transform.eulerAngles = player.transform.eulerAngles + Vector3.up * 90;
+                //player.transform.eulerAngles = player.transform.eulerAngles + Vector3.up * 90
+                transform.parent = null;
+                Vector3 angles = player.transform.rotation.eulerAngles;
+                player.transform.LookAt(transform);
+                player.transform.rotation = Quaternion.Euler(angles.x, player.transform.eulerAngles.y, angles.z);
+                transform.parent = player.transform;
                 lookAroundMode = false;
             }
 
