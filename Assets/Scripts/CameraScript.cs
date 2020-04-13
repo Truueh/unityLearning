@@ -9,8 +9,9 @@ public class CameraScript : MonoBehaviour
     public KeyCode lookAroundModeKey = KeyCode.Mouse1;
 
     private float targetDistance;
-    private float minTurnAngle = -45.0f;
-    private float maxTurnAngle = 0.0f;
+    private float minTurnAngle = -35.0f;
+    private float maxTurnAngle = 10f;
+    private float cameraDistanceOffset = 3;
     private float rotX;
 
     private bool lookAroundMode;
@@ -44,7 +45,7 @@ public class CameraScript : MonoBehaviour
 
             // Rotate and translate camera
             transform.eulerAngles = new Vector3(-rotX, transform.eulerAngles.y + y, 0);
-            transform.position = player.transform.position - (transform.forward * targetDistance);
+            transform.position = player.transform.position - (transform.forward * targetDistance) + new Vector3(transform.forward.x * cameraDistanceOffset, 0, transform.forward.z * cameraDistanceOffset);
         }
         else
         {
@@ -65,7 +66,7 @@ public class CameraScript : MonoBehaviour
 
             // Rotate and translate camera
             transform.eulerAngles = new Vector3(-rotX, transform.eulerAngles.y, 0);
-            transform.position = player.transform.position - (transform.forward * targetDistance);
+            transform.position = player.transform.position - (transform.forward * targetDistance) + new Vector3(transform.forward.x * cameraDistanceOffset, 0, transform.forward.z * cameraDistanceOffset);
 
             // Rotate player
             player.transform.Rotate(Vector3.up * y);
