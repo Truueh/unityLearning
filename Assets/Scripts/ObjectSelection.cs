@@ -6,6 +6,7 @@ public class ObjectSelection : MonoBehaviour
 {
     public GameObject Cam;
     public Material SelectedObjectMaterial;
+    [HideInInspector]
     public GameObject selectedObject;
     private Material originalSelectedObjectMaterial;
     public bool LockMode;
