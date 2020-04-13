@@ -16,20 +16,26 @@ public class CameraScript : MonoBehaviour
 
     private bool lookAroundMode;
 
+    ObjectSelection objSelection;
+
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         targetDistance = Vector3.Distance(transform.position, player.transform.position);
+        objSelection = player.GetComponent<ObjectSelection>();
     }
 
     void Update()
     {
         // set camera distance
-        if (Input.mouseScrollDelta.y < 0)
-            targetDistance = Mathf.Min(targetDistance + 1, 12);
-        else if (Input.mouseScrollDelta.y > 0)
-            targetDistance = Mathf.Max(targetDistance - 1, 5);
+        if (!objSelection.LockMode)
+        {
+            if (Input.mouseScrollDelta.y < 0)
+                targetDistance = Mathf.Min(targetDistance + 1, 12);
+            else if (Input.mouseScrollDelta.y > 0)
+                targetDistance = Mathf.Max(targetDistance - 1, 5);
+        }
 
         // get the mouse inputs
         float y = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
