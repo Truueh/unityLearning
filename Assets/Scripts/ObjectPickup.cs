@@ -6,7 +6,7 @@ public class ObjectPickup : MonoBehaviour
 {
     private ObjectSelection playerObjSelection;
     private GameObject selectedObject;
-    private float distanceOffset;
+    public float distanceOffset;
     private GameObject Cam;
 
     private void Start()
@@ -28,7 +28,7 @@ public class ObjectPickup : MonoBehaviour
                 distanceOffset = Mathf.Min(distanceOffset + 1, 12);
             else if (Input.mouseScrollDelta.y < 0)
                 distanceOffset = Mathf.Max(distanceOffset - 1, 5);
-        }      
+        }
 
         // Control target object if it exists
         if (selectedObject != null)
