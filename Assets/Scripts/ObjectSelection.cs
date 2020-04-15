@@ -62,7 +62,7 @@ public class ObjectSelection : MonoBehaviour
 
         // Show outline
         MeshRenderer renderer = selectedObject.GetComponent<MeshRenderer>();
-        renderer.material.SetFloat("_OutlineWidth", 0.04f);
+        renderer.material.SetFloat("_OutlineWidth", 0.05f);
     }
 
     private void DeselectObject()
